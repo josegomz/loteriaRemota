@@ -7,6 +7,7 @@ extern int errno;
 
 int main()
 {
+  inicializarCartas();
    struct sockaddr_in lsock,fsock, sname;
    int s, ss;
    int len,i;
@@ -80,7 +81,11 @@ int main()
 }
 
 void inicializarCartas(){
-
+  for (int i = 0; i < CARTAS; ++i)
+  {
+    loteriaOrdenada[i]=i+1;
+    usado[i]=false;
+  }
 }
 
 void revolverCartas(){
