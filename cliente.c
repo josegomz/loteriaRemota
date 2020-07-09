@@ -7,7 +7,7 @@ void conectar(){
   gtk_widget_destroy(window);
   window2 = gtk_application_window_new (app);
   gtk_window_set_title (GTK_WINDOW (window2), "Juego");
-  gtk_widget_set_size_request(window2,1300,680);//tamaño de la ventana creada
+  gtk_widget_set_size_request(window2,1200,650);//tamaño de la ventana creada
   gtk_window_set_resizable(GTK_WINDOW(window2),FALSE);// esta linea deja estatica la ventana
   gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
   gtk_widget_show_all(window2);// terminamo de usar la ventana

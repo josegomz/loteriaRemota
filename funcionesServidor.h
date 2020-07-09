@@ -1,4 +1,5 @@
 //funciones del servidor y puede que del cliente
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -10,6 +11,18 @@
 #include <unistd.h>
 
 #define CARTAS 54
+
+GtkApplication *app;
+GtkWidget *window;
+GtkWidget *contenedor;
+GtkWidget *fondo;
+GtkWidget *carta;
+GtkWidget *cartaC1;
+GtkWidget *cartaC2;
+GtkWidget *cartaC3;
+GtkWidget *cartaC4;
+GtkWidget *cartaC5;
+GtkWidget *cartaC6;
 
 //variables para barajear las cartas
 int loteriaOrdenada[CARTAS];
