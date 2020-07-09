@@ -8,6 +8,8 @@ extern int errno;
 int main()
 {
   inicializarCartas();
+  revolverCartas();
+  imprimirCartas();
    struct sockaddr_in lsock,fsock, sname;
    int s, ss;
    int len,i;
@@ -89,5 +91,21 @@ void inicializarCartas(){
 }
 
 void revolverCartas(){
-	
+  int index=0;  
+  srand(time(NULL)); 
+  for (int i=0; i < CARTAS; i++){
+    do{
+      index = (rand() % CARTAS);
+    }
+    while (usado[index] == true);
+    loteriaRevolvida[i] = loteriaOrdenada[index];
+    usado[index]=true;
+  }
+}
+
+void imprimirCartas(){
+  for (int i = 0; i < CARTAS; ++i)
+  {
+    printf("%d \n",loteriaRevolvida[i]);
+  }
 }
