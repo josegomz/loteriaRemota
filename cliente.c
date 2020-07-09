@@ -1,8 +1,9 @@
+/*gcc -o cliente cliente.c funcionesCliente.h `pkg-config --libs --cflags gtk+-3.0` -lallegro_audio -lallegro_acodec -lallegro_main -lallegro
+*/
 #include "funcionesCliente.h"
 
-
-void conectar()
-{
+//funion que conecta con el servidor de la loteria
+void conectar(){
   gtk_widget_destroy(window);
   window2 = gtk_application_window_new (app);
   gtk_window_set_title (GTK_WINDOW (window2), "Juego");
@@ -10,7 +11,28 @@ void conectar()
   gtk_window_set_resizable(GTK_WINDOW(window2),FALSE);// esta linea deja estatica la ventana
   gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
   gtk_widget_show_all(window2);// terminamo de usar la ventana
+  al_play_sample(audiowin,1,0,1,ALLEGRO_PLAYMODE_ONCE,NULL);
 }
+
+//inicializa allegro asi como sus componentes
+void inicializarAllegro(){
+	al_init();
+	if (!al_install_audio()){//inicializa el audio
+		fprintf(stderr, "failed to initialize audio!\n");
+		exit(0);
+	}
+	if(!al_init_acodec_addon()){
+        	fprintf(stderr, "failed to initialize audio codecs!\n");
+        	exit(0);
+	}
+	if (!al_reserve_samples(1)){//reserva la cantidad de samples que pueden estar al mismo tiempo
+	        fprintf(stderr, "failed to reserve samples!\n");
+	        exit(0);
+	}
+	audioerror=al_load_sample("Recursos/sonido/error.ogg");
+	audiowin=al_load_sample("Recursos/sonido/win.ogg");
+}
+
 
 /*Cuando se activa un Radio Button*/
 static void button_toggled_cb (GtkWidget *button,
@@ -54,7 +76,7 @@ static void activate (GtkApplication *app,
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER); // La posición en la pantalla de la ventana
   gtk_window_set_resizable(GTK_WINDOW(window),FALSE); // Para desabilitar la propiedad redimensionable
   contenedor = gtk_fixed_new(); // Crea un nuevo contenedor
-  fondo = gtk_image_new_from_file("fondo1b.jpg"); 
+  fondo = gtk_image_new_from_file("Recursos/fondo1b.jpg"); 
   gtk_widget_set_size_request(window,100,100); // definir el tamaño de la ventana
 
   /*Crea un Radio button inicial*/
@@ -115,6 +137,7 @@ static void activate (GtkApplication *app,
 
 int main (int argc, char **argv)
 {
+  inicializarAllegro();
   int status;
 
   app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
