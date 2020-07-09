@@ -18,6 +18,7 @@ bool usado[CARTAS];
 
 void inicializarCartas();
 void revolverCartas();
+void imprimirCartas();
 
 int plantilla[10][16] = {{1,2,3,4,10,11,12,13,19,20,21,22,28,29,30,31},
 					{6,7,8,9,15,16,17,18,24,25,26,27,33,34,35,36},
