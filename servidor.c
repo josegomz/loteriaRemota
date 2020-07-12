@@ -1,85 +1,56 @@
 // Servidor de la loteria remota
-// Compilar: 
+// Compilar: gcc -o servidor servidor.c funcionesServidor.h `pkg-config --libs --cflags gtk+-3.0` 
 // Ejecutar: ./servidor
 #include "funcionesServidor.h"
 #define MAX_LINE 120
 extern int errno;
 
-int main()
+static void activate (GtkApplication *app,
+          gpointer        user_data)
+{
+  window = gtk_application_window_new (app); // Crea la ventana
+  gtk_window_set_title (GTK_WINDOW (window), "Conexión al servidor"); // Asigna Titulo a la ventana 
+  gtk_window_set_default_size (GTK_WINDOW (window),1200,650); // El tamaño por defaul de la ventana
+  gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER); // La posición en la pantalla de la ventana
+  gtk_window_set_resizable(GTK_WINDOW(window),FALSE); // Para desabilitar la propiedad redimensionable
+  contenedor = gtk_fixed_new(); // Crea un nuevo contenedor
+  fondo = gtk_image_new_from_file("Recursos/fondo2.jpg"); 
+  carta = gtk_image_new_from_file("Recursos/img/1.jpg");
+  cartaC1 = gtk_image_new_from_file("Recursos/tabla.jpg");
+  cartaC2 = gtk_image_new_from_file("Recursos/tabla.jpg");
+  cartaC3 = gtk_image_new_from_file("Recursos/tabla.jpg");
+  cartaC4 = gtk_image_new_from_file("Recursos/tabla.jpg");
+  cartaC5 = gtk_image_new_from_file("Recursos/tabla.jpg");
+  cartaC6 = gtk_image_new_from_file("Recursos/tabla.jpg");
+
+  gtk_fixed_put(GTK_FIXED(contenedor),fondo,0,0);//se coloca el fondo al contenedor
+  gtk_fixed_put(GTK_FIXED(contenedor),carta,50,30);
+  gtk_fixed_put(GTK_FIXED(contenedor),cartaC1,600,30);
+  gtk_fixed_put(GTK_FIXED(contenedor),cartaC2,830,30);
+  gtk_fixed_put(GTK_FIXED(contenedor),cartaC3,1060,30);
+  gtk_fixed_put(GTK_FIXED(contenedor),cartaC4,600,280);
+  gtk_fixed_put(GTK_FIXED(contenedor),cartaC5,830,280);
+  gtk_fixed_put(GTK_FIXED(contenedor),cartaC6,1060,280);
+  
+  
+
+  //Agrega el contenedor a la ventana y la muestra.
+  gtk_container_add (GTK_CONTAINER(window),contenedor);
+  gtk_widget_show_all (window);
+}
+
+int main(int argc, char **argv)
 {
   inicializarCartas();
   revolverCartas();
   imprimirCartas();
-   struct sockaddr_in lsock,fsock, sname;
-   int s, ss;
-   int len,i;
-   char buf[MAX_LINE], resp[MAX_LINE];
-   //Creación de socket
-   if((s=socket(AF_INET,SOCK_STREAM,0)) < 0) {
-      perror("SOCKET: ");
-      exit(0);
-   }
-   lsock.sin_family = AF_INET;
-   lsock.sin_port = htons(4400); /* puerto para dar el servicio */
-   lsock.sin_addr.s_addr =0; /* direccion IP de mi maquina servidora */
-   //Asignación de dirección local 
-   if(bind(s,(struct sockaddr *)&lsock, sizeof(struct sockaddr_in)) < 0 ){
-      perror("BIND: ");
-      exit(1);
-   }
-   //La llamada al sistema listen()  
-   if(listen(s,3)<0){
-      perror("LISTEN: ");
-      exit(1);
-   }
-    
-   while(1){ 
-      len = sizeof(struct sockaddr_in); /* &len: entra y sale el tamano del socket esperado */
-      //La llamada al sistema accept() 
-      if((ss=accept(s,(struct sockaddr *)&fsock, &len)) < 0){
-         perror("ACCEPT: ");
-         continue;
-      }
-      printf("Un cliente conectado\n");
-      if (fork() == 0) {
-         /* Aqui se ejecuta el proceso hijo */
-         /* Cierra el socket incompleto */
-         /* se dedica a atender la conexion con el socket completo */
-         close(s);
-         while(1){ // Transferencia de datos.
-            if((len=recv(ss,buf,MAX_LINE-1,0))<=0){
-               perror("RECV: "); /* Si len==0 entonces el cliente cerro la conexion */
-               exit(1);
-            }
-            //Aqui imprimo la direccion IP del cliente y el puerto al que esta conectado
-            printf("La dirección IP que tiene el cliente es: %s \n",inet_ntoa(fsock.sin_addr));
-            
-            printf("Cadena Recibida: %s\n",buf);
-            if(strcmp(buf,"A16hg7Aez2m2E")==0){
-               printf("Termina el servicio por decision del Cliente\n");
-               close(ss); //Cerrar la conexión
-               exit(0); /* el proceso hijo se mata */
-            }
-             if(strcmp(buf,"A1tC003FY2z3E")==0)
-               {
-                 printf("Contraseña Correcta\n");
-                 strcpy(resp,"Contraseña Correcta");   
-               }    
-             else
-                {
-                 printf("Contraseña Incorrecta\n");
-                 strcpy(resp,"Contraseña Incorrecta");
-                }
-             
-            // Transferencia de datos. 
-            if(send(ss,resp,strlen(resp),0) < len) /* responde al cliente */
-               perror("SEND: ");
-         } /*while */
-      } /* if fork */
-      else /* Aqui continua el proceso vigia para aceptar otra conexion */
-         close(ss); /* el padre cierra el socket completo que dejo al hijo */
-   } /*while*/
-  return 0;
+  int status;
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_FLAGS_NONE);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
 }
 
 void inicializarCartas(){
