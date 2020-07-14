@@ -102,23 +102,33 @@ void conectar(){
         close(s);
         exit(0);
     }
-    g_print ("Conectado al servidor: %l    \n",fsock.sin_addr.s_addr);
-
-    //mostrar cliente
-  gtk_widget_destroy(window);
-  window2 = gtk_application_window_new (app);
-  gtk_window_set_title (GTK_WINDOW (window2), "Loteria");
-  gtk_widget_set_size_request(window2,1200,650);//tamaño de la ventana creada
-  gtk_window_set_resizable(GTK_WINDOW(window2),FALSE);// esta linea deja estatica la ventana
-  gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
-  contenedor = gtk_fixed_new(); // Crea un nuevo contenedor
-  fondo = gtk_image_new_from_file("Recursos/fondo2.jpg"); 
-  gtk_fixed_put(GTK_FIXED(contenedor),fondo,0,0);//se coloca el fondo al contenedor
-  gtk_container_add (GTK_CONTAINER(window2),contenedor);
-  gtk_widget_show_all(window2);// terminamo de usar la ventana
-
-
+    //g_print ("Conectado al servidor: %l    \n",fsock.sin_addr.s_addr);
+ 
+  //mostrar cliente
+    mostrarVentanaJuego();
   //al_play_sample(audiowin,1,0,1,ALLEGRO_PLAYMODE_ONCE,NULL);
+}
+
+void mostrarVentanaJuego(){
+	gtk_widget_destroy(window);
+  	window2 = gtk_application_window_new (app);
+  	gtk_window_set_title (GTK_WINDOW (window2), "Loteria");
+  	gtk_widget_set_size_request(window2,1200,650);//tamaño de la ventana creada
+  	gtk_window_set_resizable(GTK_WINDOW(window2),FALSE);// esta linea deja estatica la ventana
+  	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
+  	contenedor = gtk_fixed_new(); // Crea un nuevo contenedor
+  	fondo = gtk_image_new_from_file("Recursos/fondo2b.jpg");
+	tabla = gtk_image_new_from_file("Recursos/img/tablas/1.jpg");
+	carta = gtk_image_new_from_file("Recursos/img/1.jpg");
+	btnloteria = gtk_button_new();
+	gtk_widget_set_size_request(btnloteria,283,73);
+	gtk_fixed_put(GTK_FIXED(contenedor),btnloteria,130,610);
+  	construirTablero();
+  	gtk_fixed_put(GTK_FIXED(contenedor),fondo,0,0);//se coloca el fondo al contenedor
+  	gtk_fixed_put (GTK_FIXED(contenedor),tabla,595,23);
+	gtk_fixed_put(GTK_FIXED(contenedor),carta,100,30);
+  	gtk_container_add (GTK_CONTAINER(window2),contenedor);
+  	gtk_widget_show_all(window2);// terminamo de usar la ventana
 }
 
 
@@ -139,6 +149,26 @@ void inicializarAllegro(){
 	}
 	audioerror=al_load_sample("Recursos/sonido/error.ogg");
 	audiowin=al_load_sample("Recursos/sonido/win.ogg");
+}
+
+void construirTablero(){
+	int i, y = 30;
+	for(i=0;i<4;i++){
+		btnplanilla[i][0] = gtk_button_new();
+		btnplanilla[i][1] = gtk_button_new();	
+		btnplanilla[i][2] = gtk_button_new();	
+		btnplanilla[i][3] = gtk_button_new();
+		gtk_widget_set_size_request(btnplanilla[i][0],120,150);
+		gtk_widget_set_size_request(btnplanilla[i][1],120,150);
+		gtk_widget_set_size_request(btnplanilla[i][2],120,150);
+		gtk_widget_set_size_request(btnplanilla[i][3],120,150);
+		gtk_fixed_put (GTK_FIXED(contenedor),btnplanilla[i][0],600,y);
+		gtk_fixed_put (GTK_FIXED(contenedor),btnplanilla[i][1],740,y);
+		gtk_fixed_put (GTK_FIXED(contenedor),btnplanilla[i][2],880,y);
+		gtk_fixed_put (GTK_FIXED(contenedor),btnplanilla[i][3],1020,y);
+		y += 160;
+	} 
+  
 }
 
 // funcion cuando marquen local
