@@ -1,3 +1,8 @@
+//solo es el back-end del cliente
+
+//compilar: gcc -o client client.c -pthread -lallegro -lallegro_main -lallegro_audio -lallegro_acodec
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
