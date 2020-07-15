@@ -105,19 +105,19 @@ int main()
     signal(SIGINT, catch_ctrl_c_and_exit);
 
     // Naming
-    printf("Please enter your name: ");
+    printf("Nombre: ");
     if (fgets(nickname, LENGTH_NAME, stdin) != NULL) {
         str_trim_lf(nickname, LENGTH_NAME);
     }
     if (strlen(nickname) < 2 || strlen(nickname) >= LENGTH_NAME-1) {
-        printf("\nName must be more than one and less than thirty characters.\n");
+        printf("\nnombre entre 2 o 30 caracteres\n");
         exit(EXIT_FAILURE);
     }
 
     // Create socket
     sockfd = socket(AF_INET , SOCK_STREAM , 0);
     if (sockfd == -1) {
-        printf("Fail to create a socket.");
+        printf("Falla al crear el socket");
         exit(EXIT_FAILURE);
     }
 
@@ -134,33 +134,33 @@ int main()
     // Connect to Server
     int err = connect(sockfd, (struct sockaddr *)&server_info, s_addrlen);
     if (err == -1) {
-        printf("Connection to Server error!\n");
+        printf("Error al conectar!\n");
         exit(EXIT_FAILURE);
     }
     
     // Names
     getsockname(sockfd, (struct sockaddr*) &client_info, (socklen_t*) &c_addrlen);
     getpeername(sockfd, (struct sockaddr*) &server_info, (socklen_t*) &s_addrlen);
-    printf("Connect to Server: %s:%d\n", inet_ntoa(server_info.sin_addr), ntohs(server_info.sin_port));
-    printf("You are: %s:%d\n", inet_ntoa(client_info.sin_addr), ntohs(client_info.sin_port));
+    printf("Conectado: %s:%d\n", inet_ntoa(server_info.sin_addr), ntohs(server_info.sin_port));
+    printf("tu : %s:%d\n", inet_ntoa(client_info.sin_addr), ntohs(client_info.sin_port));
 
     send(sockfd, nickname, LENGTH_NAME, 0);
 
     pthread_t send_msg_thread;
     if (pthread_create(&send_msg_thread, NULL, (void *) send_msg_handler, NULL) != 0) {
-        printf ("Create pthread error!\n");
+        printf ("Error al crear el hilo!\n");
         exit(EXIT_FAILURE);
     }
 
     pthread_t recv_msg_thread;
     if (pthread_create(&recv_msg_thread, NULL, (void *) recv_msg_handler, NULL) != 0) {
-        printf ("Create pthread error!\n");
+        printf ("Error al crear el hilo!\n");
         exit(EXIT_FAILURE);
     }
 
     while (1) {
         if(flag) {
-            printf("\nBye\n");
+            printf("\nSalido\n");
             break;
         }
     }

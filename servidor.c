@@ -36,7 +36,7 @@ void cargar_servidor(){
     // Create socket
     server_sockfd = socket(AF_INET , SOCK_STREAM , 0);
     if (server_sockfd == -1) {
-        printf("Fail to create a socket.");
+        printf("Falla al crear el socket.");
         exit(EXIT_FAILURE);
     }
     // Socket information
@@ -95,7 +95,7 @@ gboolean cargar_jugadores(gpointer data){
 
         pthread_t id;//declaramos un hilo por cada jugador
         if (pthread_create(&id, NULL, (void *)client_handler, (void *)c) != 0) {
-            perror("Create pthread error!\n");//error al crea rle hilo
+            perror("Error al crear el hilo!\n");//error al crea rle hilo
             exit(EXIT_FAILURE);
         }
 
@@ -165,7 +165,6 @@ void capturar_ctrl_c_y_exit(int sig) {
         root = root->siguiente;
         free(tmp);
     }
-    printf("Bye\n");
     exit(EXIT_SUCCESS);
 }
 
@@ -250,8 +249,8 @@ void client_handler(void *p_client) {
             }
             sprintf(send_buffer, "%s£º%s ", np->name, recv_buffer);
         } else if (receive == 0 || strcmp(recv_buffer, "exit") == 0) {
-            printf("%s(%s)(%d) leave the chatroom.\n", np->name, np->ip, np->dato);
-            sprintf(send_buffer, "%s(%s) leave the chatroom.", np->name, np->ip);
+            printf("%s(%s)(%d) lSe salió\n", np->name, np->ip, np->dato);
+            sprintf(send_buffer, "%s(%s) Se salió", np->name, np->ip);
             leave_flag = 1;
         } else {
             printf("Fatal Error: -1\n");
