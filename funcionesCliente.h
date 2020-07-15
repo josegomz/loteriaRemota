@@ -35,6 +35,12 @@
   GtkWidget *button1;
   GtkWidget *button2;
   GSList *group;
+   
+ // Tabla y Botones 
+  GtkWidget *tabla;
+  GtkWidget *btnplanilla[4][4];
+  GtkWidget *carta;
+  GtkWidget *btnloteria;
 
 ALLEGRO_SAMPLE *audiocarta =NULL;
 ALLEGRO_SAMPLE *audioerror =NULL;
@@ -46,5 +52,7 @@ ALLEGRO_SAMPLE *audioclic =NULL;
 
 void conectar();
 void inicializarAllegro();
+void mostrarVentanaJuego();
+void construirTablero();
 static void on_rb_local (GtkWidget *button, gpointer user_data);
 static void on_rb_remoto (GtkWidget *button,gpointer user_data);
