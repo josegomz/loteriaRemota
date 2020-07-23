@@ -44,12 +44,12 @@ Clientes *root, *now;//estos serviran para identificar el primero y el ultimo
 int loteriaOrdenada[CARTAS];
 int loteriaRevolvida[CARTAS];
 bool usado[CARTAS];
+int tablero[10]={5,4,6,3,7,2,8,9,1,10};
+int usuarios = 0;
 bool ganador = false;//para verificar si ya hay un ganador
 
 int iniciar_juego =0;
 int carta_actual =0;
-sem_t semaforo;
-
 void inicializarCartas();
 void revolverCartas();
 void imprimirCartas();

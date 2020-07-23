@@ -2,7 +2,7 @@
 */
 #include "funcionesCliente.h"
 
-static void activate (GtkApplication *app,gpointer        user_data){
+static void activate (GtkApplication *app,gpointer        user_data){  
   window = gtk_application_window_new (app); // Crea la ventana
   gtk_window_set_title (GTK_WINDOW (window), "Conexión al servidor"); // Asigna Titulo a la ventana 
   gtk_window_set_default_size (GTK_WINDOW (window), 350,250); // El tamaño por defaul de la ventana
@@ -31,7 +31,6 @@ static void activate (GtkApplication *app,gpointer        user_data){
   gtk_widget_set_size_request(btnConectar,160,65);
 
   contInfoRe = gtk_fixed_new(); // se crea el Contenedor que va a contener los elementos del servidor remoto
-  
   gtk_fixed_put(GTK_FIXED(contenedor), btnConectar,190,550); 
   gtk_fixed_put(GTK_FIXED(contenedor),fondo,0,0);//se coloca el fondo al contenedor
 
@@ -103,7 +102,8 @@ void conectar(){
         exit(0);
     }
     //g_print ("Conectado al servidor: %l    \n",fsock.sin_addr.s_addr);
- 
+    send(s,user,LENGTH_NAME,0);
+    recv(s,tablero,3,0);
   //mostrar cliente
     mostrarVentanaJuego();
   //al_play_sample(audiowin,1,0,1,ALLEGRO_PLAYMODE_ONCE,NULL);
@@ -118,7 +118,9 @@ void mostrarVentanaJuego(){
   	gtk_window_set_position(GTK_WINDOW(window2), GTK_WIN_POS_CENTER);
   	contenedor = gtk_fixed_new(); // Crea un nuevo contenedor
   	fondo = gtk_image_new_from_file("Recursos/fondo2b.jpg");
-	tabla = gtk_image_new_from_file("Recursos/img/tablas/1.jpg");
+	char link_tablero[60];
+	sprintf(link_tablero,"Recursos/img/tablas/%s.jpg",tablero);
+	tabla = gtk_image_new_from_file(link_tablero);
 	carta = gtk_image_new_from_file("Recursos/img/1.jpg");
 	btnloteria = gtk_button_new();
 	gtk_widget_set_size_request(btnloteria,283,73);

@@ -57,7 +57,6 @@ void cargar_servidor(){
     now = root;
     //agregar usuarios al 
     pthread_t hilo_cartas;
-    sem_init(&semaforo,0,1);//crea un semaforo
     if(pthread_create(&hilo_cartas,NULL,*repartir_cartas,NULL)){
         perror("Error al crear el hilo");
         exit(EXIT_FAILURE);
@@ -71,7 +70,7 @@ gboolean cargar_jugadores(gpointer data){
   struct sockaddr_in client_info;
   int c_addrlen = sizeof(client_info);
   memset(&client_info, 0, c_addrlen);
-  int usuarios = 0;
+
     while (1) {
       while(gtk_events_pending()) gtk_main_iteration();
       if(usuarios>=2){
@@ -236,6 +235,9 @@ void client_handler(void *p_client) {
         sprintf(send_buffer, "%s(%s) Bienvenido al juego.", np->name, np->ip);//se almacena en send_buffer
         enviar_msg_a_todos(np, send_buffer);
     }
+    char tablero_send[3];
+    sprintf(tablero_send,"%d",tablero[usuarios]);
+    send(np->dato,tablero_send,3,0);
 
     // Conversation
     while (1) {
